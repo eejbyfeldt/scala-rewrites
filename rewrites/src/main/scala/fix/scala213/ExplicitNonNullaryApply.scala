@@ -21,7 +21,7 @@ import scalafix.internal.v1.LazyValue
 final class ExplicitNonNullaryApply(global: LazyValue[ScalafixGlobal])
     extends SemanticRule("fix.scala213.ExplicitNonNullaryApply")
 {
-  def this() = this(LazyValue.later(() => ScalafixGlobal.newCompiler(Nil, Nil, Map.empty)))
+  def this() = this(LazyValue.later(() => ScalafixGlobal.newCompiler(Nil, Nil, Map.empty).get))
 
   override def fix(implicit doc: SemanticDocument): Patch = {
     try unsafeFix() catch {
@@ -123,8 +123,8 @@ final class ExplicitNonNullaryApply(global: LazyValue[ScalafixGlobal])
         "Try `ThisBuild / scalafixScalaBinaryVersion := CrossVersion.binaryScalaVersion(scalaVersion.value)`."
       )
     } else {
-      Configured.ok(new ExplicitNonNullaryApply(LazyValue.later { () =>
-        ScalafixGlobal.newCompiler(config.scalacClasspath, config.scalacOptions, Map.empty)
+      Configured.ok(new ExplicitNonNullaryApply(LazyValue.later{ () =>
+        ScalafixGlobal.newCompiler(config.scalacClasspath, config.scalacOptions, Map.empty).get
       }))
     }
   }
